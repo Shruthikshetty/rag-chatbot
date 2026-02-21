@@ -55,16 +55,17 @@ export default function PDFUploadPage() {
   return (
     <div className="bg-background h-[calc(100vh-5rem)] pt-4">
       <div>
-        <h1 className="text-3xl font-bold text-foreground mb-8 text-center">
-          PDF upload
-        </h1>
         <Card className="m-6">
           <CardContent className="flex flex-col gap-5">
             <div className="flex flex-col gap-2">
-              <Label htmlFor="pdf-upload" className=" text-lg">
+              <Label
+                htmlFor="pdf-upload"
+                className="justify-center font-bold text-foreground text-2xl mb-4"
+              >
                 Upload PDF file
               </Label>
               <Input
+                className="h-10"
                 id="pdf-upload"
                 type="file"
                 accept=".pdf"

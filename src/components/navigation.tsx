@@ -7,12 +7,15 @@ import {
   SignUpButton,
 } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export const Navigation = () => {
   return (
     <nav className="border-b border-foreground/10">
       <div className="flex container h-16 items-center justify-between px-4 mx-auto">
-        <div className="text-xl font-semibold"> RAG Chatbot</div>
+        <Link className="text-xl font-semibold" href={"/"}>
+          RAG Chatbot
+        </Link>
         <div className="flex gap-2">
           {/* when user is signed out */}
           <SignedOut>
