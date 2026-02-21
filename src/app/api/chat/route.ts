@@ -26,10 +26,6 @@ export async function POST(req: Request) {
       messages: await convertToModelMessages(messages),
     });
 
-    result.content.then((res) => {
-      console.log(res);
-    });
-
     return result.toUIMessageStreamResponse();
   } catch (error) {
     console.log(error);
