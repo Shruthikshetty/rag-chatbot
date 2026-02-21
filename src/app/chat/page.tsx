@@ -22,7 +22,8 @@ import {
   PromptInputTools,
 } from "@/components/ai-elements/prompt-input";
 import { useChat } from "@ai-sdk/react";
-import { Bot, User } from "lucide-react";
+import { Bot } from "lucide-react";
+import StarterMessage from "@/components/StarterMessage";
 
 export default function ChatPage() {
   const [input, setInput] = useState("");
@@ -42,6 +43,7 @@ export default function ChatPage() {
   return (
     <div className="max-w-4xl mx-auto  p-6 relative size-full h-[calc(100vh-5rem)] ">
       <div className="flex flex-col h-full">
+        {messages.length === 0 ? <StarterMessage /> : null}
         {/* all the chat conversations */}
         <Conversation className="h-full">
           <ConversationContent>

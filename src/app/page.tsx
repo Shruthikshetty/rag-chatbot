@@ -24,11 +24,16 @@ export default function Home() {
           Ask questions, get insights, and explore your data interactively.
         </p>
 
-        <div className="pt-4">
+        <div className="pt-4 flex gap-4">
+          <Link href="/upload">
+            <Button size="lg" className="gap-2 text-md font-medium">
+              Upload PDF
+              <ArrowRight className="w-5 h-5" />
+            </Button>
+          </Link>
           <Link href="/chat">
             <Button size="lg" className="gap-2 text-md font-medium">
               Start Chat
-              {/* Adding a right arrow icon for flair */}
               <ArrowRight className="w-5 h-5" />
             </Button>
           </Link>
