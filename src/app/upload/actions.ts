@@ -1,10 +1,10 @@
 "use server";
 
 import { PDFParse } from "pdf-parse";
-import { db } from "@/lib/db.config";
-import { generateEmbeddings } from "@/lib/embeddings";
-import { documents } from "@/lib/db.schema";
 import { chunkContent } from "@/lib/chunking";
+import { db } from "@/lib/db.config";
+import { documents } from "@/lib/db.schema";
+import { generateEmbeddings } from "@/lib/embeddings";
 
 // used to process pdf files its important to split pd data into chunks
 export async function processPDF(formData: FormData) {

@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { processPDF } from "./actions";
-import { Card, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
+import { processPDF } from "./actions";
 
 export default function PDFUploadPage() {
   const [isLoading, setIsLoading] = useState(false);

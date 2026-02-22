@@ -1,12 +1,13 @@
 "use client";
 
+import { useChat } from "@ai-sdk/react";
+import { Bot } from "lucide-react";
 import { useState } from "react";
 import {
   Conversation,
   ConversationContent,
   ConversationScrollButton,
 } from "@/components/ai-elements/conversation";
-import { Spinner } from "@/components/ui/spinner";
 import {
   Message,
   MessageContent,
@@ -16,14 +17,13 @@ import {
   PromptInput,
   PromptInputBody,
   PromptInputFooter,
-  PromptInputMessage,
+  type PromptInputMessage,
   PromptInputSubmit,
   PromptInputTextarea,
   PromptInputTools,
 } from "@/components/ai-elements/prompt-input";
-import { useChat } from "@ai-sdk/react";
-import { Bot } from "lucide-react";
 import StarterMessage from "@/components/StarterMessage";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function ChatPage() {
   const [input, setInput] = useState("");

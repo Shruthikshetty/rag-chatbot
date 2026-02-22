@@ -1,16 +1,7 @@
 "use client";
 
-import type { ComponentProps } from "react";
-
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupButton,
-  InputGroupInput,
-  InputGroupText,
-} from "@/components/ui/input-group";
-import { cn } from "@/lib/utils";
 import { CheckIcon, CopyIcon } from "lucide-react";
+import type { ComponentProps } from "react";
 import {
   createContext,
   useCallback,
@@ -19,6 +10,14 @@ import {
   useRef,
   useState,
 } from "react";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+  InputGroupText,
+} from "@/components/ui/input-group";
+import { cn } from "@/lib/utils";
 
 interface SnippetContextType {
   code: string;

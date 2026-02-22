@@ -2,7 +2,8 @@
 
 import type { LanguageModelUsage } from "ai";
 import type { ComponentProps } from "react";
-
+import { createContext, useContext, useMemo } from "react";
+import { getUsage } from "tokenlens";
 import { Button } from "@/components/ui/button";
 import {
   HoverCard,
@@ -11,8 +12,6 @@ import {
 } from "@/components/ui/hover-card";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
-import { createContext, useContext, useMemo } from "react";
-import { getUsage } from "tokenlens";
 
 const PERCENT_MAX = 100;
 const ICON_RADIUS = 10;
