@@ -1,5 +1,7 @@
 This is a simple rag chat bot built with ai sdk and nextjs
 
+![App View](./public/screenshot.png)
+
 ## Getting Started
 
 First, run the development server:

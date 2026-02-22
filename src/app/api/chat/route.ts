@@ -1,12 +1,12 @@
-import { openai } from "@ai-sdk/openai";
+import { type OpenAIChatLanguageModelOptions, openai } from "@ai-sdk/openai";
 import {
   convertToModelMessages,
+  type InferUITools,
+  stepCountIs,
   streamText,
   tool,
+  type UIDataTypes,
   type UIMessage,
-  InferUITools,
-  UIDataTypes,
-  stepCountIs,
 } from "ai";
 import { z } from "zod";
 import { searchDocuments } from "@/lib/search";
@@ -41,8 +41,11 @@ const tools = {
 };
 
 // types
+export type ChatMetadata = {
+  totalTokens?: number;
+};
 export type ChatTools = InferUITools<typeof tools>;
-export type ChatMessage = UIMessage<never, UIDataTypes, ChatTools>;
+export type ChatMessage = UIMessage<ChatMetadata, UIDataTypes, ChatTools>;
 
 export async function POST(req: Request) {
   // get  messages
@@ -67,19 +70,32 @@ export async function POST(req: Request) {
       model: openai("gpt-5-nano"),
       messages: await convertToModelMessages(messages),
       tools,
-      stopWhen: stepCountIs(2),
+      stopWhen: stepCountIs(3),
       system: `You are a helpful assistant with access to a knowledge base. 
           When users ask questions, search the knowledge base for relevant information.
           Always search before answering if the question might relate to uploaded documents.
-          Base your answers on the search results when available. Give concise answers that correctly answer what the user is asking for. Do not flood them with all the information from the search results.`,
+          Base your answers on the search results when available. Give concise answers that correctly answer what the user is asking for. Do not flood them with all the information from the search results.
+          try to be efficient in framing the query by providing more rated info and do not call the search tool more than twice
+          if no relevant information is found in the knowledge base, say so`,
+      providerOptions: {
+        openai: {
+          reasoningEffort: "medium",
+          reasoningSummary: "auto",
+        } as OpenAIChatLanguageModelOptions,
+      },
     });
 
-    // usage
-    result.usage.then((usage) => {
-      console.log(usage);
+    return result.toUIMessageStreamResponse({
+      sendReasoning: true,
+      // attach some usage info to the message
+      messageMetadata: ({ part }) => {
+        if (part.type === "finish") {
+          return {
+            totalTokens: part?.totalUsage?.totalTokens,
+          };
+        }
+      },
     });
-
-    return result.toUIMessageStreamResponse();
   } catch (error) {
     console.log(error);
     return Response.json(
