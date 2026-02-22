@@ -67,11 +67,13 @@ export async function POST(req: Request) {
       model: openai("gpt-5-nano"),
       messages: await convertToModelMessages(messages),
       tools,
-      stopWhen: stepCountIs(2),
+      stopWhen: stepCountIs(3),
       system: `You are a helpful assistant with access to a knowledge base. 
           When users ask questions, search the knowledge base for relevant information.
           Always search before answering if the question might relate to uploaded documents.
-          Base your answers on the search results when available. Give concise answers that correctly answer what the user is asking for. Do not flood them with all the information from the search results.`,
+          Base your answers on the search results when available. Give concise answers that correctly answer what the user is asking for. Do not flood them with all the information from the search results.
+          try to be efficient in framing the query by providing more rated info and do not call the search tool more than twice
+          if no relevant information is found in the knowledge base, say so`,
       providerOptions: {
         openai: {
           reasoningEffort: "medium",
