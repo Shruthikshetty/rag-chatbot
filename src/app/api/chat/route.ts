@@ -1,12 +1,12 @@
-import { openai, OpenAIChatLanguageModelOptions } from "@ai-sdk/openai";
+import { type OpenAIChatLanguageModelOptions, openai } from "@ai-sdk/openai";
 import {
   convertToModelMessages,
+  type InferUITools,
+  stepCountIs,
   streamText,
   tool,
+  type UIDataTypes,
   type UIMessage,
-  InferUITools,
-  UIDataTypes,
-  stepCountIs,
 } from "ai";
 import { z } from "zod";
 import { searchDocuments } from "@/lib/search";

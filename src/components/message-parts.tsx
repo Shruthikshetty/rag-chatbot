@@ -1,6 +1,7 @@
+"use client";
+import type { UIMessage } from "ai";
 import { Bot } from "lucide-react";
 import { MessageResponse } from "./ai-elements/message";
-import { UIMessage } from "ai";
 import {
   Reasoning,
   ReasoningContent,
@@ -27,16 +28,20 @@ const MessageParts = ({
     isLastMessage && isStreaming && lastPart?.type === "reasoning";
   return (
     <>
+      {/* role based icon */}
       {message.role === "assistant" ? (
         <Bot className="text-foreground" />
       ) : null}
 
+      {/* reasoning */}
       {hasReasoning ? (
         <Reasoning className="w-full" isStreaming={isReasoningStreaming}>
           <ReasoningTrigger />
           <ReasoningContent>{reasoningText}</ReasoningContent>
         </Reasoning>
       ) : null}
+
+      {/*rest of the message parts */}
       {message.parts.map((part, index) => {
         switch (part.type) {
           case "text":
