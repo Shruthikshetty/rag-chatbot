@@ -43,7 +43,7 @@ export default function PDFUploadPage() {
           text: result?.error ?? "Error while processing PDF",
         });
       }
-    } catch (error) {
+    } catch {
       setMessage({
         type: "error",
         text: "Error while processing PDF",
