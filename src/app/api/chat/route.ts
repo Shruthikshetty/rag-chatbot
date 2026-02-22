@@ -1,4 +1,4 @@
-import { openai } from "@ai-sdk/openai";
+import { openai, OpenAIChatLanguageModelOptions } from "@ai-sdk/openai";
 import {
   convertToModelMessages,
   streamText,
@@ -72,6 +72,12 @@ export async function POST(req: Request) {
           When users ask questions, search the knowledge base for relevant information.
           Always search before answering if the question might relate to uploaded documents.
           Base your answers on the search results when available. Give concise answers that correctly answer what the user is asking for. Do not flood them with all the information from the search results.`,
+      providerOptions: {
+        openai: {
+          reasoningEffort: "medium",
+          reasoningSummary: "auto",
+        } as OpenAIChatLanguageModelOptions,
+      },
     });
 
     // usage
@@ -79,7 +85,7 @@ export async function POST(req: Request) {
       console.log(usage);
     });
 
-    return result.toUIMessageStreamResponse();
+    return result.toUIMessageStreamResponse({ sendReasoning: true });
   } catch (error) {
     console.log(error);
     return Response.json(

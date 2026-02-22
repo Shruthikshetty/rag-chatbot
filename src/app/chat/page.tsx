@@ -22,8 +22,9 @@ import {
   PromptInputTextarea,
   PromptInputTools,
 } from "@/components/ai-elements/prompt-input";
-import StarterMessage from "@/components/StarterMessage";
+import StarterMessage from "@/components/starter-message";
 import { Spinner } from "@/components/ui/spinner";
+import MessageParts from "@/components/message-parts";
 
 export default function ChatPage() {
   const [input, setInput] = useState("");
@@ -47,24 +48,14 @@ export default function ChatPage() {
         {/* all the chat conversations */}
         <Conversation className="h-full">
           <ConversationContent>
-            {messages.map((message) => (
+            {messages.map((message, index) => (
               <Message key={message.id} from={message.role}>
                 <MessageContent>
-                  {message.role === "assistant" ? (
-                    <Bot className="text-foreground" />
-                  ) : null}
-                  {message.parts.map((part, index) => {
-                    switch (part.type) {
-                      case "text":
-                        return (
-                          <MessageResponse key={`${message.id}-${index}`}>
-                            {part.text}
-                          </MessageResponse>
-                        );
-                      default:
-                        return null;
-                    }
-                  })}
+                  <MessageParts
+                    message={message}
+                    isStreaming={status === "streaming"}
+                    isLastMessage={index === messages.length - 1}
+                  />
                 </MessageContent>
               </Message>
             ))}
