@@ -1,13 +1,12 @@
 "use client";
 import { Bot } from "lucide-react";
+import type { ChatMessage } from "@/app/api/chat/route";
 import { MessageResponse } from "./ai-elements/message";
 import {
   Reasoning,
   ReasoningContent,
   ReasoningTrigger,
 } from "./ai-elements/reasoning";
-import { ChatMessage } from "@/app/api/chat/route";
-import { Fragment } from "react";
 import { Shimmer } from "./ai-elements/shimmer";
 import { Task, TaskContent, TaskItem, TaskTrigger } from "./ai-elements/task";
 

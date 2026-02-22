@@ -20,7 +20,7 @@ import {
 import MessageParts from "@/components/message-parts";
 import StarterMessage from "@/components/starter-message";
 import { Spinner } from "@/components/ui/spinner";
-import { ChatMessage } from "../api/chat/route";
+import type { ChatMessage } from "../api/chat/route";
 
 export default function ChatPage() {
   const [input, setInput] = useState("");
