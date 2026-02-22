@@ -17,7 +17,10 @@ export async function searchDocuments(
   // convert search query to embedding
   const embedding = await generateEmbedding(query);
   // get the similarity of this embedding with the embeddings from our db (cosineDistance  calculates disimailarities hence we do 1 - cosineDistance)
-  const similarity = sql<number>`1 - ${cosineDistance(documents.embedding, embedding)}`; // sql fro raw sql
+  const similarity = sql<number>`1 - (${cosineDistance(
+    documents.embedding,
+    embedding,
+  )})`;
 
   const similarDocuments = await db
     .select({
@@ -26,7 +29,7 @@ export async function searchDocuments(
       similarity,
     })
     .from(documents)
-    .where(gt(similarity, threshold)) // above 0.5 similarity
+    .where(gt(similarity, threshold))
     .orderBy(desc(similarity))
     .limit(limit);
 
