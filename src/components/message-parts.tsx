@@ -91,6 +91,13 @@ const MessageParts = ({
             return null;
         }
       })}
+
+      {/* meta data info */}
+      {message.metadata?.totalTokens ? (
+        <div className="text-xs text-muted-foreground mt-1 hover:text-foreground transition-colors">
+          Total tokens: {message.metadata.totalTokens}
+        </div>
+      ) : null}
     </>
   );
 };

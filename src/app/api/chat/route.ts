@@ -41,8 +41,11 @@ const tools = {
 };
 
 // types
+export type ChatMetadata = {
+  totalTokens?: number;
+};
 export type ChatTools = InferUITools<typeof tools>;
-export type ChatMessage = UIMessage<never, UIDataTypes, ChatTools>;
+export type ChatMessage = UIMessage<ChatMetadata, UIDataTypes, ChatTools>;
 
 export async function POST(req: Request) {
   // get  messages
@@ -82,12 +85,17 @@ export async function POST(req: Request) {
       },
     });
 
-    // usage
-    result.usage.then((usage) => {
-      console.log(usage);
+    return result.toUIMessageStreamResponse({
+      sendReasoning: true,
+      // attach some usage info to the message
+      messageMetadata: ({ part }) => {
+        if (part.type === "finish") {
+          return {
+            totalTokens: part?.totalUsage?.totalTokens,
+          };
+        }
+      },
     });
-
-    return result.toUIMessageStreamResponse({ sendReasoning: true });
   } catch (error) {
     console.log(error);
     return Response.json(
