@@ -20,11 +20,12 @@ import {
 import MessageParts from "@/components/message-parts";
 import StarterMessage from "@/components/starter-message";
 import { Spinner } from "@/components/ui/spinner";
+import { ChatMessage } from "../api/chat/route";
 
 export default function ChatPage() {
   const [input, setInput] = useState("");
   // hook to manage the chat state
-  const { messages, sendMessage, status } = useChat();
+  const { messages, sendMessage, status } = useChat<ChatMessage>();
 
   // handles the submit
   const handleSubmit = (message: PromptInputMessage) => {

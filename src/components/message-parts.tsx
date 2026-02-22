@@ -1,5 +1,4 @@
 "use client";
-import type { UIMessage } from "ai";
 import { Bot } from "lucide-react";
 import { MessageResponse } from "./ai-elements/message";
 import {
@@ -7,13 +6,16 @@ import {
   ReasoningContent,
   ReasoningTrigger,
 } from "./ai-elements/reasoning";
+import { ChatMessage } from "@/app/api/chat/route";
+import { Fragment } from "react";
+import { Shimmer } from "./ai-elements/shimmer";
 
 const MessageParts = ({
   message,
   isLastMessage,
   isStreaming,
 }: {
-  message: UIMessage;
+  message: ChatMessage;
   isLastMessage: boolean;
   isStreaming: boolean;
 }) => {
@@ -44,6 +46,18 @@ const MessageParts = ({
       {/*rest of the message parts */}
       {message.parts.map((part, index) => {
         switch (part.type) {
+          case "tool-searchKnowledgeBase":
+            switch (part.state) {
+              case "input-available":
+              case "input-streaming":
+                return (
+                  <Shimmer key={`${message.id}-${index}`}>
+                    searching knowledge base...
+                  </Shimmer>
+                );
+              default:
+                return null;
+            }
           case "text":
             return (
               <MessageResponse key={`${message.id}-${index}`}>
