@@ -19,18 +19,23 @@ const tools = {
       query: z.string().describe("The search query to fins relevant documents"),
     }),
     execute: async ({ query }) => {
-      const results = await searchDocuments(query, 5, 0.4);
+      try {
+        const results = await searchDocuments(query, 5, 0.4);
 
-      if (results.length === 0) {
-        return "No relevant information found in the database";
+        if (results.length === 0) {
+          return "No relevant information found in the database";
+        }
+
+        // format the results into string with index
+        const formattedResult = results
+          .map((result, index) => `[${index + 1}] ${result.content}`)
+          .join("\n\n");
+
+        return formattedResult;
+      } catch (error) {
+        console.error("Knowledge base search error:", error);
+        return "Failed to search knowledge base due to a database error.";
       }
-
-      // format the results into string with index
-      const formattedResult = results
-        .map((result, index) => `[${index + 1}] ${result.content}`)
-        .join("\n\n");
-
-      return formattedResult;
     },
   }),
 };
@@ -59,7 +64,7 @@ export async function POST(req: Request) {
   try {
     // stream text
     const result = streamText({
-      model: openai("gpt-4.1-mini"),
+      model: openai("gpt-5-nano"),
       messages: await convertToModelMessages(messages),
       tools,
       stopWhen: stepCountIs(2),
