@@ -46,9 +46,16 @@ export default function ChatPage() {
   // handles the submit
   const handleSubmit = (message: PromptInputMessage) => {
     if (!message.text.trim()) return;
-    sendMessage({
-      text: message.text,
-    });
+    sendMessage(
+      {
+        text: message.text,
+      },
+      {
+        body: {
+          model,
+        },
+      },
+    );
     // clear our input
     setInput("");
   };

@@ -10,7 +10,7 @@ import {
 } from "ai";
 import { z } from "zod";
 import { searchDocuments } from "@/lib/search";
-import { customOpenapi } from "./model";
+import { customProviderRegistry, modelList, ModelType } from "./model";
 
 // all the tools are defined here
 const tools = {
@@ -50,7 +50,10 @@ export type ChatMessage = UIMessage<ChatMetadata, UIDataTypes, ChatTools>;
 
 export async function POST(req: Request) {
   // get  messages
-  const { messages = [] }: { messages: ChatMessage[] } = await req.json();
+  const {
+    messages = [],
+    model,
+  }: { messages: ChatMessage[]; model: ModelType } = await req.json();
 
   // check if messages are empty
   if (messages.length === 0) {
@@ -68,7 +71,9 @@ export async function POST(req: Request) {
   try {
     // stream text
     const result = streamText({
-      model: customOpenapi.languageModel("reasoning"),
+      model: customProviderRegistry.languageModel(
+        (model?.id as any) || modelList[0].id,
+      ),
       messages: await convertToModelMessages(messages),
       tools,
       stopWhen: stepCountIs(3),
@@ -78,12 +83,6 @@ export async function POST(req: Request) {
           Base your answers on the search results when available. Give concise answers that correctly answer what the user is asking for. Do not flood them with all the information from the search results.
           try to be efficient in framing the query by providing more rated info and do not call the search tool more than twice
           if no relevant information is found in the knowledge base, say so`,
-      // providerOptions: {
-      //   openai: {
-      //     reasoningEffort: "medium",
-      //     reasoningSummary: "auto",
-      //   } as OpenAIChatLanguageModelOptions,
-      // },
     });
 
     return result.toUIMessageStreamResponse({
