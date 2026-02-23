@@ -110,4 +110,6 @@ export const modelList = [
   },
 ];
 
+export const nonToolModels = ["ollama:roleplay", "ollama:reasoning"];
+
 export type ModelType = (typeof modelList)[0];

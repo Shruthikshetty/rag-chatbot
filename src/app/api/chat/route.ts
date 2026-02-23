@@ -10,7 +10,12 @@ import {
 } from "ai";
 import { z } from "zod";
 import { searchDocuments } from "@/lib/search";
-import { customProviderRegistry, modelList, ModelType } from "./model";
+import {
+  customProviderRegistry,
+  modelList,
+  ModelType,
+  nonToolModels,
+} from "./model";
 
 // all the tools are defined here
 const tools = {
@@ -75,7 +80,7 @@ export async function POST(req: Request) {
         (model?.id as any) || modelList[0].id,
       ),
       messages: await convertToModelMessages(messages),
-      tools,
+      ...(nonToolModels.includes(model?.id || "") ? {} : { tools }),
       stopWhen: stepCountIs(3),
       system: `You are a helpful assistant with access to a knowledge base. 
           When users ask questions, search the knowledge base for relevant information.

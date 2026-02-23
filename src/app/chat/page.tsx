@@ -59,7 +59,7 @@ export default function ChatPage() {
     // clear our input
     setInput("");
   };
-
+  // TODO show error in case model throws one
   return (
     <div className="max-w-4xl mx-auto  p-6 relative size-full h-[calc(100vh-5rem)] ">
       <div className="flex flex-col h-full">
@@ -100,7 +100,7 @@ export default function ChatPage() {
                 open={modelSelectorOpen}
               >
                 <ModelSelectorTrigger asChild>
-                  <PromptInputButton>
+                  <PromptInputButton className="border">
                     <ModelSelectorLogo provider={model.chefSlug} />
 
                     {model.name && (
