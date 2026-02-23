@@ -1,7 +1,7 @@
 "use client";
 
 import { useChat } from "@ai-sdk/react";
-import { useState } from "react";
+import { memo, useCallback, useState } from "react";
 import {
   Conversation,
   ConversationContent,
@@ -11,6 +11,7 @@ import { Message, MessageContent } from "@/components/ai-elements/message";
 import {
   PromptInput,
   PromptInputBody,
+  PromptInputButton,
   PromptInputFooter,
   type PromptInputMessage,
   PromptInputSubmit,
@@ -21,6 +22,20 @@ import MessageParts from "@/components/message-parts";
 import StarterMessage from "@/components/starter-message";
 import { Spinner } from "@/components/ui/spinner";
 import type { ChatMessage } from "../api/chat/route";
+import {
+  ModelSelector,
+  ModelSelectorContent,
+  ModelSelectorEmpty,
+  ModelSelectorGroup,
+  ModelSelectorInput,
+  ModelSelectorItem,
+  ModelSelectorList,
+  ModelSelectorLogo,
+  ModelSelectorLogoGroup,
+  ModelSelectorName,
+  ModelSelectorTrigger,
+} from "@/components/ai-elements/model-selector";
+import { CheckIcon } from "lucide-react";
 
 export default function ChatPage() {
   const [input, setInput] = useState("");
@@ -36,6 +51,35 @@ export default function ChatPage() {
     // clear our input
     setInput("");
   };
+
+  // const ModelItem = memo(({ model, selectedModel, onSelect }: any) => {
+  //   const handleSelect = useCallback(
+  //     () => onSelect(model.id),
+  //     [onSelect, model.id],
+  //   );
+  //   return (
+  //     <ModelSelectorItem
+  //       key={model.id}
+  //       onSelect={handleSelect}
+  //       value={model.id}
+  //     >
+  //       <ModelSelectorLogo provider={model.chefSlug} />
+  //       <ModelSelectorName>{model.name}</ModelSelectorName>
+  //       <ModelSelectorLogoGroup>
+  //         {model.providers.map((provider: string) => (
+  //           <ModelSelectorLogo key={provider} provider={provider} />
+  //         ))}
+  //       </ModelSelectorLogoGroup>
+  //       {selectedModel === model.id ? (
+  //         <CheckIcon className="ml-auto size-4" />
+  //       ) : (
+  //         <div className="ml-auto size-4" />
+  //       )}
+  //     </ModelSelectorItem>
+  //   );
+  // });
+
+  // ModelItem.displayName = "ModelItem";
 
   return (
     <div className="max-w-4xl mx-auto  p-6 relative size-full h-[calc(100vh-5rem)] ">
@@ -72,6 +116,40 @@ export default function ChatPage() {
           </PromptInputBody>
           <PromptInputFooter>
             <PromptInputTools>
+              {/* <ModelSelector
+              // onOpenChange={setModelSelectorOpen}
+              // open={modelSelectorOpen}
+              >
+                <ModelSelectorTrigger asChild>
+                  <PromptInputButton>
+                    <ModelSelectorLogo provider={models[0].chefSlug} />
+
+                    {models[0].name && (
+                      <ModelSelectorName>{models[0].name}</ModelSelectorName>
+                    )}
+                  </PromptInputButton>
+                </ModelSelectorTrigger>
+                <ModelSelectorContent>
+                  <ModelSelectorInput placeholder="Search models..." />
+                  <ModelSelectorList>
+                    <ModelSelectorEmpty>No models found.</ModelSelectorEmpty>
+                    {["OpenAI", "Anthropic", "Google"].map((chef) => (
+                      <ModelSelectorGroup heading={chef} key={chef}>
+                        {models
+                          .filter((m) => m.chef === chef)
+                          .map((m) => (
+                            <ModelItem
+                              key={m.id}
+                              m={m}
+                              // onSelect={handleModelSelect}
+                              // selectedModel={model}
+                            />
+                          ))}
+                      </ModelSelectorGroup>
+                    ))}
+                  </ModelSelectorList>
+                </ModelSelectorContent>
+              </ModelSelector> */}
               {/* Model selector , web search etc */}
             </PromptInputTools>
             <PromptInputSubmit disabled={!input} status={status} />
