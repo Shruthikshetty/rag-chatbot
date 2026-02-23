@@ -54,6 +54,8 @@ export const customProviderRegistry = createProviderRegistry({
   ollama: customOllama,
   openai: customOpenapi,
 });
+// provider list
+export const chefList = ["OpenAI", "Ollama"];
 
 // export model list
 export const modelList = [
@@ -107,3 +109,5 @@ export const modelList = [
     providers: ["ollama"],
   },
 ];
+
+export type ModelType = (typeof modelList)[0];
