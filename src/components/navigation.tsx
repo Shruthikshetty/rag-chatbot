@@ -6,6 +6,7 @@ import {
   SignUpButton,
 } from "@clerk/nextjs";
 import Link from "next/link";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 
 export const Navigation = () => {
@@ -16,6 +17,7 @@ export const Navigation = () => {
           RAG Chatbot
         </Link>
         <div className="flex gap-2">
+          <ThemeToggle />
           {/* when user is signed out */}
           <SignedOut>
             <SignInButton mode="modal">

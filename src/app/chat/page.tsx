@@ -11,6 +11,7 @@ import { Message, MessageContent } from "@/components/ai-elements/message";
 import {
   PromptInput,
   PromptInputBody,
+  PromptInputButton,
   PromptInputFooter,
   type PromptInputMessage,
   PromptInputSubmit,
@@ -21,22 +22,44 @@ import MessageParts from "@/components/message-parts";
 import StarterMessage from "@/components/starter-message";
 import { Spinner } from "@/components/ui/spinner";
 import type { ChatMessage } from "../api/chat/route";
+import {
+  ModelSelector,
+  ModelSelectorContent,
+  ModelSelectorEmpty,
+  ModelSelectorGroup,
+  ModelSelectorInput,
+  ModelSelectorList,
+  ModelSelectorLogo,
+  ModelSelectorName,
+  ModelSelectorTrigger,
+} from "@/components/ai-elements/model-selector";
+import { chefList, modelList } from "../api/chat/model";
+import ModelItem from "@/components/model-item";
 
 export default function ChatPage() {
   const [input, setInput] = useState("");
+  const [model, setModel] = useState(modelList[0]);
+  const [modelSelectorOpen, setModelSelectorOpen] = useState(false);
   // hook to manage the chat state
-  const { messages, sendMessage, status } = useChat<ChatMessage>();
+  const { messages, sendMessage, status, stop } = useChat<ChatMessage>();
 
   // handles the submit
   const handleSubmit = (message: PromptInputMessage) => {
     if (!message.text.trim()) return;
-    sendMessage({
-      text: message.text,
-    });
+    sendMessage(
+      {
+        text: message.text,
+      },
+      {
+        body: {
+          model,
+        },
+      },
+    );
     // clear our input
     setInput("");
   };
-
+  // TODO show error in case model throws one
   return (
     <div className="max-w-4xl mx-auto  p-6 relative size-full h-[calc(100vh-5rem)] ">
       <div className="flex flex-col h-full">
@@ -72,9 +95,49 @@ export default function ChatPage() {
           </PromptInputBody>
           <PromptInputFooter>
             <PromptInputTools>
+              <ModelSelector
+                onOpenChange={setModelSelectorOpen}
+                open={modelSelectorOpen}
+              >
+                <ModelSelectorTrigger asChild>
+                  <PromptInputButton className="border">
+                    <ModelSelectorLogo provider={model.chefSlug} />
+
+                    {model.name && (
+                      <ModelSelectorName>{model.name}</ModelSelectorName>
+                    )}
+                  </PromptInputButton>
+                </ModelSelectorTrigger>
+                <ModelSelectorContent>
+                  <ModelSelectorInput placeholder="Search models..." />
+                  <ModelSelectorList>
+                    <ModelSelectorEmpty>No models found.</ModelSelectorEmpty>
+                    {chefList.map((chef) => (
+                      <ModelSelectorGroup heading={chef} key={chef}>
+                        {modelList
+                          .filter((m) => m.chef === chef)
+                          .map((m) => (
+                            <ModelItem
+                              key={m.id}
+                              model={m}
+                              onSelect={setModel}
+                              selectedModel={model}
+                            />
+                          ))}
+                      </ModelSelectorGroup>
+                    ))}
+                  </ModelSelectorList>
+                </ModelSelectorContent>
+              </ModelSelector>
               {/* Model selector , web search etc */}
             </PromptInputTools>
-            <PromptInputSubmit disabled={!input} status={status} />
+            <PromptInputSubmit
+              disabled={status === "submitted"}
+              status={status}
+              onStop={() => {
+                stop();
+              }}
+            />
           </PromptInputFooter>
         </PromptInput>
       </div>
