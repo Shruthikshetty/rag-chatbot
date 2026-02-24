@@ -41,7 +41,7 @@ export default function ChatPage() {
   const [model, setModel] = useState(modelList[0]);
   const [modelSelectorOpen, setModelSelectorOpen] = useState(false);
   // hook to manage the chat state
-  const { messages, sendMessage, status, stop } = useChat<ChatMessage>();
+  const { messages, sendMessage, status, stop, error } = useChat<ChatMessage>();
 
   // handles the submit
   const handleSubmit = (message: PromptInputMessage) => {
@@ -59,7 +59,7 @@ export default function ChatPage() {
     // clear our input
     setInput("");
   };
-  // TODO show error in case model throws one
+  console.log(JSON.stringify(error, null, 2));
   return (
     <div className="max-w-4xl mx-auto  p-6 relative size-full h-[calc(100vh-5rem)] ">
       <div className="flex flex-col h-full">
@@ -84,6 +84,9 @@ export default function ChatPage() {
           </ConversationContent>
           <ConversationScrollButton />
         </Conversation>
+        {error ? (
+          <p className="text-red-500 text-center">{error.message}</p>
+        ) : null}
 
         {/* User input area */}
         <PromptInput className="mt-4" onSubmit={handleSubmit}>

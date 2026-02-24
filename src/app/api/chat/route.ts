@@ -81,7 +81,7 @@ export async function POST(req: Request) {
         >[0],
       ),
       messages: await convertToModelMessages(messages),
-      ...(nonToolModels.includes(model?.id || "") ? {} : { tools }),
+      tools,
       stopWhen: stepCountIs(3),
       system: `You are a helpful assistant with access to a knowledge base. 
           When users ask questions, search the knowledge base for relevant information.
@@ -93,6 +93,17 @@ export async function POST(req: Request) {
 
     return result.toUIMessageStreamResponse({
       sendReasoning: true,
+      onError(error: any) {
+        if (error && typeof error === "object" && error.responseBody) {
+          try {
+            const parsed = JSON.parse(error.responseBody);
+            if (parsed.error) return parsed.error;
+          } catch {
+            return String(error.responseBody);
+          }
+        }
+        return error instanceof Error ? error.message : "Something went wrong";
+      },
       // attach some usage info to the message
       messageMetadata: ({ part }) => {
         if (part.type === "finish") {
