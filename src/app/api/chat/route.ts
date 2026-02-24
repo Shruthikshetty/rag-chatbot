@@ -9,12 +9,7 @@ import {
 } from "ai";
 import { z } from "zod";
 import { searchDocuments } from "@/lib/search";
-import {
-  customProviderRegistry,
-  type ModelType,
-  modelList,
-  nonToolModels,
-} from "./model";
+import { customProviderRegistry, type ModelType, modelList } from "./model";
 
 // all the tools are defined here
 const tools = {

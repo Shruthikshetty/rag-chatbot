@@ -7,7 +7,12 @@ import {
   ConversationContent,
   ConversationScrollButton,
 } from "@/components/ai-elements/conversation";
-import { Message, MessageContent } from "@/components/ai-elements/message";
+import {
+  Message,
+  MessageAction,
+  MessageActions,
+  MessageContent,
+} from "@/components/ai-elements/message";
 import {
   ModelSelector,
   ModelSelectorContent,
@@ -35,7 +40,7 @@ import StarterMessage from "@/components/starter-message";
 import { Spinner } from "@/components/ui/spinner";
 import { chefList, modelList } from "../api/chat/model";
 import type { ChatMessage } from "../api/chat/route";
-import { GlobeIcon } from "lucide-react";
+import { CopyIcon, GlobeIcon, RefreshCcwIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function ChatPage() {
@@ -63,7 +68,19 @@ export default function ChatPage() {
     // clear our input
     setInput("");
   };
-  console.log(JSON.stringify(error, null, 2));
+
+  // handles the copy of a message response
+  const handleCopy = (message: ChatMessage) => {
+    const textToCopy = message.parts
+      .filter((part) => part.type === "text")
+      .map((part) => part.text)
+      .join("\n\n");
+    try {
+      navigator.clipboard.writeText(textToCopy);
+    } catch {
+      console.error("failed to copy");
+    }
+  };
   return (
     <div className="max-w-4xl mx-auto  p-6 relative size-full h-[calc(100vh-5rem)] ">
       <div className="flex flex-col h-full">
@@ -80,6 +97,18 @@ export default function ChatPage() {
                     isLastMessage={index === messages.length - 1}
                   />
                 </MessageContent>
+                {message.role === "assistant" && (
+                  <MessageActions className="w-full justify-end">
+                    <MessageAction
+                      className="active:scale-95 group"
+                      label="Copy"
+                      onClick={() => handleCopy(message)}
+                      tooltip="Copy to clipboard"
+                    >
+                      <CopyIcon className="transition-colors group-active:fill-foreground" />
+                    </MessageAction>
+                  </MessageActions>
+                )}
               </Message>
             ))}
             {status === "streaming" || status === "submitted" ? (
