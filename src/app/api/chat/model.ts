@@ -1,11 +1,14 @@
+import { type OpenAIChatLanguageModelOptions, openai } from "@ai-sdk/openai";
 import {
   createProviderRegistry,
   customProvider,
   defaultSettingsMiddleware,
   wrapLanguageModel,
 } from "ai";
-import { openai, OpenAIChatLanguageModelOptions } from "@ai-sdk/openai";
-import { ollama, OllamaCompletionProviderOptions } from "ollama-ai-provider-v2";
+import {
+  type OllamaCompletionProviderOptions,
+  ollama,
+} from "ollama-ai-provider-v2";
 
 //create a custom provider for openai
 export const customOpenapi = customProvider({

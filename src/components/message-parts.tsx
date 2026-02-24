@@ -82,7 +82,11 @@ const MessageParts = ({
             }
           case "text":
             return (
-              <MessageResponse key={`${message.id}-${index}`}>
+              <MessageResponse
+                key={`${message.id}-${index}`}
+                controls={true}
+                isAnimating={isStreaming}
+              >
                 {part.text}
               </MessageResponse>
             );

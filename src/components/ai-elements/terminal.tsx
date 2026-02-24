@@ -132,7 +132,8 @@ export const TerminalStatus = ({
       className={cn("flex items-center gap-2 text-xs text-zinc-400", className)}
       {...props}
     >
-      {children ?? <Shimmer className="w-16" />}
+      {/* TODO check this logic */}
+      {children ?? <Shimmer className="w-16" children={""} />}
     </div>
   );
 };

@@ -1,4 +1,3 @@
-import { type OpenAIChatLanguageModelOptions, openai } from "@ai-sdk/openai";
 import {
   convertToModelMessages,
   type InferUITools,
@@ -10,12 +9,7 @@ import {
 } from "ai";
 import { z } from "zod";
 import { searchDocuments } from "@/lib/search";
-import {
-  customProviderRegistry,
-  modelList,
-  ModelType,
-  nonToolModels,
-} from "./model";
+import { customProviderRegistry, type ModelType, modelList } from "./model";
 
 // all the tools are defined here
 const tools = {
@@ -58,7 +52,12 @@ export async function POST(req: Request) {
   const {
     messages = [],
     model,
-  }: { messages: ChatMessage[]; model: ModelType } = await req.json();
+    search = true,
+  }: {
+    messages: ChatMessage[];
+    model: ModelType;
+    search?: boolean;
+  } = await req.json();
 
   // check if messages are empty
   if (messages.length === 0) {
@@ -77,10 +76,12 @@ export async function POST(req: Request) {
     // stream text
     const result = streamText({
       model: customProviderRegistry.languageModel(
-        (model?.id as any) || modelList[0].id,
+        (model?.id || modelList[0].id) as Parameters<
+          typeof customProviderRegistry.languageModel
+        >[0],
       ),
       messages: await convertToModelMessages(messages),
-      ...(nonToolModels.includes(model?.id || "") ? {} : { tools }),
+      tools: search ? tools : undefined,
       stopWhen: stepCountIs(3),
       system: `You are a helpful assistant with access to a knowledge base. 
           When users ask questions, search the knowledge base for relevant information.
@@ -92,6 +93,17 @@ export async function POST(req: Request) {
 
     return result.toUIMessageStreamResponse({
       sendReasoning: true,
+      onError(error: any) {
+        if (error && typeof error === "object" && error.responseBody) {
+          try {
+            const parsed = JSON.parse(error.responseBody);
+            if (parsed.error) return parsed.error;
+          } catch {
+            return String(error.responseBody);
+          }
+        }
+        return error instanceof Error ? error.message : "Something went wrong";
+      },
       // attach some usage info to the message
       messageMetadata: ({ part }) => {
         if (part.type === "finish") {

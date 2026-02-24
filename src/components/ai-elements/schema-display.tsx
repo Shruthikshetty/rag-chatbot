@@ -176,6 +176,7 @@ export const SchemaDisplayPath = ({
       className={cn("font-mono text-sm", className)}
       // biome-ignore lint/security/noDangerouslySetInnerHtml: "needed for parameter highlighting"
       // oxlint-disable-next-line eslint-plugin-react(no-danger)
+      //@ts-ignore
       dangerouslySetInnerHTML={{ __html: children ?? highlightedPath }}
       {...props}
     />
