@@ -1,6 +1,14 @@
 "use client";
 
 import { useChat } from "@ai-sdk/react";
+import {
+  CopyIcon,
+  GlobeIcon,
+  Mic2,
+  RefreshCcwIcon,
+  Speaker,
+  Volume2,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   Conversation,
@@ -38,17 +46,9 @@ import MessageParts from "@/components/message-parts";
 import ModelItem from "@/components/model-item";
 import StarterMessage from "@/components/starter-message";
 import { Spinner } from "@/components/ui/spinner";
+import { cn } from "@/lib/utils";
 import { chefList, modelList } from "../api/chat/model";
 import type { ChatMessage } from "../api/chat/route";
-import {
-  CopyIcon,
-  GlobeIcon,
-  Mic2,
-  RefreshCcwIcon,
-  Speaker,
-  Volume2,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
 
 export default function ChatPage() {
   const [input, setInput] = useState("");
@@ -133,6 +133,7 @@ export default function ChatPage() {
     // Speak
     window.speechSynthesis.speak(utterance);
   };
+
   return (
     <div className="max-w-4xl mx-auto  p-6 relative size-full h-[calc(100vh-5rem)] ">
       <div className="flex flex-col h-full">
