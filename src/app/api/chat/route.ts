@@ -57,6 +57,7 @@ export async function POST(req: Request) {
   const {
     messages = [],
     model,
+    search = true,
   }: { messages: ChatMessage[]; model: ModelType } = await req.json();
 
   // check if messages are empty
@@ -81,7 +82,7 @@ export async function POST(req: Request) {
         >[0],
       ),
       messages: await convertToModelMessages(messages),
-      tools,
+      ...(search ? tools : {}),
       stopWhen: stepCountIs(3),
       system: `You are a helpful assistant with access to a knowledge base. 
           When users ask questions, search the knowledge base for relevant information.

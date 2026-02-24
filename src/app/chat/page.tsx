@@ -35,11 +35,14 @@ import StarterMessage from "@/components/starter-message";
 import { Spinner } from "@/components/ui/spinner";
 import { chefList, modelList } from "../api/chat/model";
 import type { ChatMessage } from "../api/chat/route";
+import { GlobeIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function ChatPage() {
   const [input, setInput] = useState("");
   const [model, setModel] = useState(modelList[0]);
   const [modelSelectorOpen, setModelSelectorOpen] = useState(false);
+  const [knowledgeSearch, setKnowledgeSearch] = useState(true);
   // hook to manage the chat state
   const { messages, sendMessage, status, stop, error } = useChat<ChatMessage>();
 
@@ -53,6 +56,7 @@ export default function ChatPage() {
       {
         body: {
           model,
+          search: knowledgeSearch,
         },
       },
     );
@@ -98,6 +102,18 @@ export default function ChatPage() {
           </PromptInputBody>
           <PromptInputFooter>
             <PromptInputTools>
+              {/* knowledge base search button */}
+              <PromptInputButton
+                className={cn(
+                  "border",
+                  knowledgeSearch ? "text-foreground" : "",
+                )}
+                onClick={() => setKnowledgeSearch(!knowledgeSearch)}
+              >
+                <GlobeIcon size={16} />
+                <span>Search</span>
+              </PromptInputButton>
+              {/* model selector */}
               <ModelSelector
                 onOpenChange={setModelSelectorOpen}
                 open={modelSelectorOpen}
@@ -132,7 +148,6 @@ export default function ChatPage() {
                   </ModelSelectorList>
                 </ModelSelectorContent>
               </ModelSelector>
-              {/* Model selector , web search etc */}
             </PromptInputTools>
             <PromptInputSubmit
               disabled={status === "submitted"}
