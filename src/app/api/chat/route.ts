@@ -58,7 +58,11 @@ export async function POST(req: Request) {
     messages = [],
     model,
     search = true,
-  }: { messages: ChatMessage[]; model: ModelType } = await req.json();
+  }: {
+    messages: ChatMessage[];
+    model: ModelType;
+    search?: boolean;
+  } = await req.json();
 
   // check if messages are empty
   if (messages.length === 0) {
