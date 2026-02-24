@@ -1,7 +1,7 @@
 "use client";
 
 import { useChat } from "@ai-sdk/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Conversation,
   ConversationContent,
@@ -40,7 +40,14 @@ import StarterMessage from "@/components/starter-message";
 import { Spinner } from "@/components/ui/spinner";
 import { chefList, modelList } from "../api/chat/model";
 import type { ChatMessage } from "../api/chat/route";
-import { CopyIcon, GlobeIcon, RefreshCcwIcon } from "lucide-react";
+import {
+  CopyIcon,
+  GlobeIcon,
+  Mic2,
+  RefreshCcwIcon,
+  Speaker,
+  Volume2,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function ChatPage() {
@@ -48,8 +55,17 @@ export default function ChatPage() {
   const [model, setModel] = useState(modelList[0]);
   const [modelSelectorOpen, setModelSelectorOpen] = useState(false);
   const [knowledgeSearch, setKnowledgeSearch] = useState(true);
+  const [isSpeaking, setIsSpeaking] = useState(false);
   // hook to manage the chat state
   const { messages, sendMessage, status, stop, error } = useChat<ChatMessage>();
+
+  //clean up
+  useEffect(() => {
+    // This runs when the component unmounts
+    return () => {
+      window.speechSynthesis.cancel();
+    };
+  }, []);
 
   // handles the submit
   const handleSubmit = (message: PromptInputMessage) => {
@@ -71,15 +87,51 @@ export default function ChatPage() {
 
   // handles the copy of a message response
   const handleCopy = (message: ChatMessage) => {
+    // Extract text from parts
     const textToCopy = message.parts
       .filter((part) => part.type === "text")
       .map((part) => part.text)
       .join("\n\n");
+
     try {
+      // Copy to clipboard
       navigator.clipboard.writeText(textToCopy);
     } catch {
       console.error("failed to copy");
     }
+  };
+
+  // handle read messages
+  const handleReadAloud = (message: ChatMessage) => {
+    if (isSpeaking) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+      return;
+    }
+    // Extract text from parts
+    const textToRead = message.parts
+      .filter((part) => part.type === "text")
+      .map((part) => part.text)
+      .join("\n\n");
+
+    // Cancel any ongoing speech so they don't overlap
+    window.speechSynthesis.cancel();
+
+    // Create the "Utterance"
+    const utterance = new SpeechSynthesisUtterance(textToRead);
+
+    // Optional: Customize the voice
+    utterance.rate = 1.0; // Speed (0.1 to 10)
+    utterance.pitch = 1.0; // Pitch (0 to 2)
+    utterance.volume = 1.0; // Volume (0 to 1)
+
+    // Set the onstart, onend, and onerror handlers
+    utterance.onstart = () => setIsSpeaking(true);
+    utterance.onend = () => setIsSpeaking(false);
+    utterance.onerror = () => setIsSpeaking(false);
+
+    // Speak
+    window.speechSynthesis.speak(utterance);
   };
   return (
     <div className="max-w-4xl mx-auto  p-6 relative size-full h-[calc(100vh-5rem)] ">
@@ -100,12 +152,25 @@ export default function ChatPage() {
                 {message.role === "assistant" && (
                   <MessageActions className="w-full justify-end">
                     <MessageAction
-                      className="active:scale-95 group"
+                      className="active:scale-95 transition-all"
                       label="Copy"
                       onClick={() => handleCopy(message)}
                       tooltip="Copy to clipboard"
                     >
-                      <CopyIcon className="transition-colors group-active:fill-foreground" />
+                      <CopyIcon />
+                    </MessageAction>
+                    <MessageAction
+                      className="active:scale-95 transition-all"
+                      label={isSpeaking ? "Stop" : "Read Aloud"}
+                      tooltip={isSpeaking ? "Stop speaking" : "Read aloud"}
+                      onClick={() => handleReadAloud(message)}
+                    >
+                      <Volume2
+                        className={cn(
+                          "size-4",
+                          isSpeaking ? "text-red-500" : "",
+                        )}
+                      />
                     </MessageAction>
                   </MessageActions>
                 )}
