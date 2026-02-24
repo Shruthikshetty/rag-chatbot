@@ -86,7 +86,7 @@ export async function POST(req: Request) {
         >[0],
       ),
       messages: await convertToModelMessages(messages),
-      ...(search ? tools : {}),
+      tools: search ? tools : undefined,
       stopWhen: stepCountIs(3),
       system: `You are a helpful assistant with access to a knowledge base. 
           When users ask questions, search the knowledge base for relevant information.
