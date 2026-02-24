@@ -1,11 +1,11 @@
+import { CheckIcon } from "lucide-react";
 import { memo, useCallback } from "react";
+import type { ModelType } from "@/app/api/chat/model";
 import {
   ModelSelectorItem,
   ModelSelectorLogo,
   ModelSelectorName,
 } from "./ai-elements/model-selector";
-import { CheckIcon } from "lucide-react";
-import { ModelType } from "@/app/api/chat/model";
 
 const ModelItem = ({
   model,

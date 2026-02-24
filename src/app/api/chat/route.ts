@@ -1,4 +1,3 @@
-import { type OpenAIChatLanguageModelOptions, openai } from "@ai-sdk/openai";
 import {
   convertToModelMessages,
   type InferUITools,
@@ -12,8 +11,8 @@ import { z } from "zod";
 import { searchDocuments } from "@/lib/search";
 import {
   customProviderRegistry,
+  type ModelType,
   modelList,
-  ModelType,
   nonToolModels,
 } from "./model";
 
@@ -77,7 +76,9 @@ export async function POST(req: Request) {
     // stream text
     const result = streamText({
       model: customProviderRegistry.languageModel(
-        (model?.id as any) || modelList[0].id,
+        (model?.id || modelList[0].id) as Parameters<
+          typeof customProviderRegistry.languageModel
+        >[0],
       ),
       messages: await convertToModelMessages(messages),
       ...(nonToolModels.includes(model?.id || "") ? {} : { tools }),

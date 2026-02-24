@@ -9,20 +9,6 @@ import {
 } from "@/components/ai-elements/conversation";
 import { Message, MessageContent } from "@/components/ai-elements/message";
 import {
-  PromptInput,
-  PromptInputBody,
-  PromptInputButton,
-  PromptInputFooter,
-  type PromptInputMessage,
-  PromptInputSubmit,
-  PromptInputTextarea,
-  PromptInputTools,
-} from "@/components/ai-elements/prompt-input";
-import MessageParts from "@/components/message-parts";
-import StarterMessage from "@/components/starter-message";
-import { Spinner } from "@/components/ui/spinner";
-import type { ChatMessage } from "../api/chat/route";
-import {
   ModelSelector,
   ModelSelectorContent,
   ModelSelectorEmpty,
@@ -33,8 +19,22 @@ import {
   ModelSelectorName,
   ModelSelectorTrigger,
 } from "@/components/ai-elements/model-selector";
-import { chefList, modelList } from "../api/chat/model";
+import {
+  PromptInput,
+  PromptInputBody,
+  PromptInputButton,
+  PromptInputFooter,
+  type PromptInputMessage,
+  PromptInputSubmit,
+  PromptInputTextarea,
+  PromptInputTools,
+} from "@/components/ai-elements/prompt-input";
+import MessageParts from "@/components/message-parts";
 import ModelItem from "@/components/model-item";
+import StarterMessage from "@/components/starter-message";
+import { Spinner } from "@/components/ui/spinner";
+import { chefList, modelList } from "../api/chat/model";
+import type { ChatMessage } from "../api/chat/route";
 
 export default function ChatPage() {
   const [input, setInput] = useState("");
